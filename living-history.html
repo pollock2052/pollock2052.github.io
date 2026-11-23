@@ -66,6 +66,9 @@
     .living-nav a[aria-current] { background: var(--green); color: var(--paper); text-decoration: none; }
     .living-layout article { width: 100%; max-width: 49rem; margin: 0; padding: 0; }
     .living-layout article li { margin: .45rem 0; line-height: 1.55; }
+    .encampment-photo { margin: 1.6rem 0 0; }
+    .encampment-photo img { display: block; width: 100%; height: auto; }
+    .encampment-photo figcaption { margin-top: .55rem; color: var(--muted); line-height: 1.5; }
     @media (max-width: 42rem) {
       .living-layout { grid-template-columns: 1fr; }
       .living-nav ul { display: flex; flex-wrap: wrap; gap: 0 .5rem; }
@@ -97,6 +100,10 @@
     <article>
       <h1>Living History</h1>
       <p class="lead">Field notes and photographs exploring everyday life in the 18th century, from clothing and handcrafts to cooking, travel, and life in camp.</p>
+      <figure class="encampment-photo">
+        <img src="/assets/northwest-florida-encampment-2018.webp" width="960" height="640" alt="White canvas tents and reenactors in a wooded clearing." decoding="async">
+        <figcaption>Living history encampment in Northwest Florida, <time datetime="2018-08-05">August 5, 2018</time>.</figcaption>
+      </figure>
     </article>
   </main>
   <footer class="wrap">
