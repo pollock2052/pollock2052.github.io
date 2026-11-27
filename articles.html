@@ -65,6 +65,11 @@
     .shirt-photos figcaption { color: var(--muted); font-size: .92rem; line-height: 1.5; margin-top: .45rem; }
     .article-list { list-style: none; padding: 0; }
     .article-list li { padding-block: .9rem; border-bottom: 1px solid var(--rule); }
+    .article-search { margin-top: 1.3rem; }
+    .article-search label { display: block; font-weight: bold; margin-bottom: .4rem; }
+    .article-search input { width: 100%; min-height: 2.75rem; border: 1px solid var(--muted); background: #fffaf0; color: var(--ink); font: inherit; padding: .55rem .7rem; border-radius: .2rem; }
+    .article-search input:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
+    #article-search-status { color: var(--muted); margin-top: .4rem; }
   </style>
 </head>
 <body id="top">
@@ -86,14 +91,19 @@
   <main id="main"><article>
     <h1>Articles</h1>
     <p class="lead">Research on 18th-century objects, craftsmanship, and everyday life.</p>
-    <ul class="article-list">
-      <li><h2><a href="/articles/18th-century-thanksgiving.html">Thanksgiving in the 18th Century</a></h2>
+    <div id="article-search-controls" class="article-search" role="search" aria-label="Articles" hidden>
+      <label for="article-search">Search articles</label>
+      <input id="article-search" type="search" placeholder="Try linen, cooking, or Pensacola" aria-controls="article-list">
+      <p id="article-search-status" role="status"></p>
+    </div>
+    <ul class="article-list" id="article-list">
+      <li data-topics="holiday harvest food cooking recipes pumpkin Amelia Simmons George Washington"><h2><a href="/articles/18th-century-thanksgiving.html">Thanksgiving in the 18th Century</a></h2>
         <p class="label">By Brandon Pollock · Published <time datetime="2026-11-26">November 26, 2026</time></p>
         <p>Colonial proclamations, a soldier’s ration of rice and vinegar, and Washington’s November thanksgiving.</p></li>
-      <li><h2><a href="/articles/linen-shirt.html">The 18th-Century Linen Shirt</a></h2>
+      <li data-topics="clothing garments sewing fabric tailoring textiles cuffs"><h2><a href="/articles/linen-shirt.html">The 18th-Century Linen Shirt</a></h2>
         <p class="label">By Brandon Pollock · Published <time datetime="2026-11-22">November 22, 2026</time></p>
         <p>How the shirt was worn and how makers used gussets, gathers, and small reinforcements to shape it.</p></li>
-      <li><h2><a href="/pensacola-history.html">Pensacola in the 18th Century</a></h2>
+      <li data-topics="Florida archaeology colonial history Bernardo de Gálvez American Revolution"><h2><a href="/pensacola-history.html">Pensacola in the 18th Century</a></h2>
         <p class="label">By Brandon Pollock · Published <time datetime="2026-11-22">November 22, 2026</time></p>
         <p>The Spanish presidios, British West Florida, the 1781 siege, and the return of Spanish rule.</p></li>
     </ul>
@@ -103,5 +113,31 @@
     <a href="#top">Back to top</a>
   </footer>
   <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "44e9e7049f2d450e8f48c9290cc543d5"}'></script><!-- End Cloudflare Web Analytics -->
+  <script>
+    const search = document.querySelector('#article-search');
+    const status = document.querySelector('#article-search-status');
+    const normalize = (text) => text.normalize('NFD').replace(/\p{M}/gu, '')
+      .toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+    const articles = Array.from(document.querySelectorAll('.article-list > li'), (item) => ({
+      item,
+      text: normalize(item.textContent + ' ' + (item.dataset.topics || '')),
+    }));
+
+    function filterArticles() {
+      const query = normalize(search.value);
+      const terms = query ? query.split(' ') : [];
+      let count = 0;
+      for (const { item, text } of articles) {
+        item.hidden = !terms.every((term) => text.includes(term));
+        if (!item.hidden) count++;
+      }
+      status.textContent = !query ? '' : count === 0 ? 'No articles found. Try a different keyword.'
+        : count === 1 ? '1 article found.' : count + ' articles found.';
+    }
+
+    search.addEventListener('input', filterArticles);
+    document.querySelector('#article-search-controls').hidden = false;
+    filterArticles();
+  </script>
 </body>
 </html>
